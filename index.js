@@ -53,7 +53,8 @@ module.exports = class HypercoreProofQueue {
     return new Promise((resolve) => {
       const ff = this.ff
 
-      ff.destroy()
+      ff.end()
+      ff.on('finish', () => ff.destroy())
       ff.on('close', () => {
         if (this.ff === ff) this.ff = null
         if (this.draining === true) this._resolve = resolve
