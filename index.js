@@ -3,20 +3,20 @@ const messages = require('hypercore/messages')
 const c = require('compact-encoding')
 
 const encoding = {
-  preencode (state, notification) {
-    if (!notification.request) notification.request = 0
-    c.fixed32.preencode(state, notification.discoveryKey)
-    messages.wire.data.preencode(state, notification)
+  preencode (state, proof) {
+    c.fixed32.preencode(state, proof.discoveryKey)
+    if (!proof.data.request) proof.data.request = 0
+    messages.wire.data.preencode(state, proof.data)
   },
-  encode (state, notification) {
-    if (!notification.request) notification.request = 0
-    c.fixed32.encode(state, notification.discoveryKey)
-    messages.wire.data.encode(state, notification)
+  encode (state, proof) {
+    c.fixed32.encode(state, proof.discoveryKey)
+    if (!proof.data.request) proof.data.request = 0
+    messages.wire.data.encode(state, proof.data)
   },
   decode (state) {
     return {
       discoveryKey: c.fixed32.decode(state),
-      ...messages.wire.data.decode(state)
+      data: messages.wire.data.decode(state)
     }
   }
 }
@@ -53,7 +53,7 @@ module.exports = class HypercoreProofQueue {
     return new Promise((resolve) => {
       const ff = this.ff
 
-      ff.end()
+      ff.destroy()
       ff.on('close', () => {
         if (this.ff === ff) this.ff = null
         if (this.draining === true) this._resolve = resolve
