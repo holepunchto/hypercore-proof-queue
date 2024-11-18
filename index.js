@@ -25,7 +25,8 @@ module.exports = class HypercoreProofQueue {
   constructor (filename, onincoming) {
     this.filename = filename
     this.draining = false
-    this.suspending = false
+    this.suspending = true // unset in resume
+    this.ff = null
     this.onincoming = onincoming || null
     this._resolve = null
     this.resume()
