@@ -32,6 +32,7 @@ module.exports = class HypercoreProofQueue {
   }
 
   resume () {
+    if (this.suspending !== true) return
     this.suspending = false
 
     this.ff = new FIFOFile(this.filename, {
@@ -47,6 +48,7 @@ module.exports = class HypercoreProofQueue {
   }
 
   suspend () {
+    if (this.suspending !== false) return Promise.resolve()
     this.suspending = true
     if (this.ff === null) return Promise.resolve()
 
