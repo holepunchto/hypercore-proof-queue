@@ -7,7 +7,7 @@
   "description": "Store a bunch of Hypercore proofs to a file and consume them later",
   "dependencies": {
     "compact-encoding": "^2.15.0",
-    "fifofile": "^1.1.1",
+    "fifofile": "^2.0.0",
     "hypercore": "^10.37.26"
   }
 }
