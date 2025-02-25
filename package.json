@@ -8,6 +8,6 @@
   "dependencies": {
     "compact-encoding": "^2.15.0",
     "fifofile": "^2.0.0",
-    "hypercore": "^10.37.26"
+    "hypercore": "^11.0.0"
   }
 }
