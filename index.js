@@ -25,6 +25,7 @@ module.exports = class HypercoreProofQueue {
   constructor (filename, onincoming) {
     this.filename = filename
     this.draining = false
+    this.pushed = false
     this.suspending = true // unset in resume
     this.ff = null
     this.onincoming = onincoming || null
@@ -36,6 +37,7 @@ module.exports = class HypercoreProofQueue {
     if (this.suspending !== true) return
     this.suspending = false
 
+    this.pushed = false
     this.ff = new FIFOFile(this.filename, {
       valueEncoding: encoding
     })
@@ -56,13 +58,15 @@ module.exports = class HypercoreProofQueue {
     return new Promise((resolve) => {
       const ff = this.ff
 
-      ff.end()
-      ff.on('finish', () => ff.destroy())
-      ff.on('close', () => {
+      const onclose = () => {
         if (this.ff === ff) this.ff = null
         if (this.draining === true) this._resolve = resolve
         else resolve()
-      })
+      }
+
+      if (ff.destroyed) return onclose()
+      ff.destroy()
+      ff.on('close', onclose)
     })
   }
 
@@ -89,10 +93,21 @@ module.exports = class HypercoreProofQueue {
   }
 
   push (entry) {
-    if (this.ff !== null) this.ff.write(entry)
+    if (this.ff !== null) {
+      this.pushed = true
+      this.ff.write(entry)
+    }
   }
 
-  close () {
+  async close () {
+    if (this.pushed && this.ff) {
+      await new Promise(resolve => {
+        this.ff.end()
+        this.ff.on('finish', resolve)
+        this.ff.on('close', resolve)
+      })
+    }
+
     return this.suspend()
   }
 }
