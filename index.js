@@ -30,8 +30,8 @@ module.exports = class HypercoreProofQueue {
     this.ff = null
     this.onincoming = onincoming || null
     this._resolve = null
-    this.resume()
     this.log = log
+    this.resume()
   }
 
   resume () {
