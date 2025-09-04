@@ -134,11 +134,11 @@ module.exports = class HypercoreProofQueue {
         this.ff.end()
         this.ff.on('finish', () => {
           this.log('Finished called')
-          resolve
+          resolve()
         })
         this.ff.on('close', () => {
           this.log('Closing')
-          resolve
+          resolve()
         })
       })
     }
