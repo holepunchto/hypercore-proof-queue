@@ -30,7 +30,7 @@ const q = new NotificationQueue('/tmp/a-queue', async function (incoming) {
   q.suspend()
 })
 
-const data = await hc.core.tree.proof({
+const data = await hc.proof({
   block: { index: 0, nodes: 0 },
   upgrade: { start: 0, length: hc.length }
 })

@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "description": "Store a bunch of Hypercore proofs to a file and consume them later",
   "dependencies": {
-    "compact-encoding": "^2.15.0",
+    "compact-encoding": "^3.0.0",
     "fifofile": "^2.0.0",
     "hypercore": "^11.0.0"
   }
